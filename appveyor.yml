@@ -1,10 +1,27 @@
-image: Visual Studio 2022
+version: 1.0.{build}
+
+image: Visual Studio 2019
 
 init:
-  - ps: net user appveyor Password123!
-  - ps: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -Value 0
-  - ps: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-  - ps: Invoke-RestMethod ipinfo.io/ip
+  - ps: |
+      net user appveyor Password123!
+      Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+      Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+
+install:
+  - ps: |
+      # Ngrok Install
+      choco install ngrok -y
+      # Apna Ngrok AuthToken yahan lagao (apne ngrok.com se le lena free me)
+      ngrok authtoken 2zoLgLlsk2wAQl4f3b63GftvBJl_7bob4yt73qKpvb27s55X7
+      # RDP tunnel start karo
+      Start-Process ngrok "tcp 3389" -WindowStyle Hidden
+      # IP info check
+      Invoke-RestMethod ipinfo.io/ip
 
 build_script:
-  - ps: Start-Process cmd "/c ping -t localhost" -WindowStyle Hidden
+  - ps: |
+      # Fake process chalu rakho taki build band na ho
+      Start-Process cmd "/c ping -t localhost" -WindowStyle Hidden
+
+test: off
