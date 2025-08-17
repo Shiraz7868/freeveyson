@@ -4,6 +4,7 @@ init:
   - ps: net user appveyor Password123!
   - ps: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -Value 0
   - ps: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+  - ps: Invoke-RestMethod ipinfo.io/ip
 
 build_script:
   - ps: Start-Process cmd "/c ping -t localhost" -WindowStyle Hidden
